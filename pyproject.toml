@@ -7,7 +7,9 @@ authors = [
     { name = "Sushrut1101", email = "guptasushrut@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "python-telegram-bot>=22.2",
+]
 
 [build-system]
 requires = ["hatchling"]
