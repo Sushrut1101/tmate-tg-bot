@@ -1,0 +1,20 @@
+[project]
+name = "tmate-tg-bot"
+version = "0.1.0"
+description = "Telegram bot to manage tmate sessions"
+readme = "README.md"
+authors = [
+    { name = "Sushrut1101", email = "guptasushrut@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+tmate-tg-bot = "src:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
