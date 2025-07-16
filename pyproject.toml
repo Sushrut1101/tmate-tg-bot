@@ -17,7 +17,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-tmate-tg-bot = "src:main"
+tmate-tg-bot = "src.main:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
