@@ -4,7 +4,7 @@ import subprocess
 import threading
 import uuid
 
-sessions: dict[str, tuple[int, subprocess.Popen]] = {}
+sessions: dict[str, tuple[int, subprocess.Popen, dict]] = {}
 
 def create_session() -> tuple[str, dict]:
     session_id = str(uuid.uuid4())[:8]
@@ -49,7 +49,7 @@ def create_session() -> tuple[str, dict]:
     t.start()
     t.join(timeout=10)
 
-    sessions[session_id] = (proc.pid, proc)
+    sessions[session_id] = (proc.pid, proc, urls)
     return session_id, urls
 
 def kill_session(session_id: str) -> bool:
@@ -57,10 +57,11 @@ def kill_session(session_id: str) -> bool:
     if not entry:
         return False
 
-    pid, proc = entry
+    pid, proc, _ = entry
     try:
         os.killpg(os.getpgid(pid), signal.SIGTERM)
         proc.terminate()
+        proc.wait(timeout=5)
         return True
     except Exception:
         return False
@@ -69,14 +70,8 @@ def list_sessions() -> list[str]:
     return list(sessions.keys())
 
 def get_urls(session_id: str) -> dict | None:
-    # we only stored pid+proc, but reader filled `urls` in create_session
-    # so we return the last-captured urls from a side‐store
-    # easiest: stash `urls` alongside Popen:
-    #   sessions[session_id] = (proc.pid, proc, urls)
-    # then return sessions[session_id][2]
-    # for now assume you refactored to store urls too:
     entry = sessions.get(session_id)
-    return entry[2] if entry and len(entry) > 2 else None
+    return entry[2] if entry else None
 
 def cleanup_all_sessions():
     for sid in list(sessions):
