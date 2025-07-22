@@ -19,6 +19,7 @@ def main():
     app.add_handler(CommandHandler("new", commands.handle_new))
     app.add_handler(CommandHandler("list", commands.handle_list))
     app.add_handler(CommandHandler("kill", commands.handle_kill))
+    app.add_handler(CommandHandler("killall", commands.handle_killall))
     app.add_handler(CommandHandler("show", commands.handle_show))
     app.run_polling()
 

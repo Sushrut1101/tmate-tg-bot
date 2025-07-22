@@ -40,6 +40,15 @@ async def handle_kill(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = f"💀 Killed `{sid}`." if ok else "❌ Session not found."
     await update.message.reply_text(text)
 
+async def handle_killall(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    count = len(session_manager.list_sessions())
+    session_manager.cleanup_all_sessions()
+
+    if count:
+        await update.message.reply_text(f"💥 Killed {count} session(s).")
+    else:
+        await update.message.reply_text("🚫 No active sessions.")
+
 async def handle_show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args
     if not args:
