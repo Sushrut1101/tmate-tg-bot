@@ -18,6 +18,8 @@ def main():
     atexit.register(session_manager.cleanup_all_sessions)
 
     app = ApplicationBuilder().token(token).build()
+    app.add_handler(CommandHandler("start", commands.handle_start))
+    app.add_handler(CommandHandler("help",  commands.handle_help))
     app.add_handler(CommandHandler("new", commands.handle_new))
     app.add_handler(CommandHandler("list", commands.handle_list))
     app.add_handler(CommandHandler("kill", commands.handle_kill))

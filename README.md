@@ -4,6 +4,8 @@ A minimal Telegram bot to manage [tmate](https://tmate.io/) sessions via chat co
 
 ## ✨ Commands
 
+- `/start` — Show welcome message  
+- `/help` — Show available commands  
 - `/new` — Create a new tmate session  
 - `/list` — List active sessions  
 - `/kill <session_id>` — Kill a session  

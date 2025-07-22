@@ -4,6 +4,24 @@ from telegram.ext import ContextTypes
 from . import session_manager
 from .authorize import is_authorized, reject
 
+async def handle_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "👋 Hello! I’m your tmate session manager bot.\n\n"
+        "Use /help to see available commands."
+    )
+
+async def handle_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "📖 Available commands:\n"
+        "/new — Create a new tmate session\n"
+        "/list — Show all active sessions\n"
+        "/show <id> — Show session URLs\n"
+        "/kill <id> — Kill a session\n"
+        "/killall — Kill all sessions\n"
+        "/help — Show this help message\n\n"
+        "🚫 Access is restricted to authorized users."
+    )
+
 async def handle_new(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_authorized(update):
         return await reject(update)
