@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler
 
 from src.modules import commands, session_manager
+from src.modules.authorize import load_authorized
 
 def main():
     load_dotenv(dotenv_path=Path.cwd() / ".env")
     token = os.getenv("BOT_TOKEN")
+    load_authorized()
     if not token:
         raise ValueError("BOT_TOKEN environment variable not set")
 

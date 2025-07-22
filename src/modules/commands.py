@@ -2,8 +2,11 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from . import session_manager
+from .authorize import is_authorized, reject
 
 async def handle_new(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return await reject(update)
     await update.message.reply_text("⏳ Spawning tmate session…")
     sid, urls = session_manager.create_session()
 
@@ -23,6 +26,8 @@ async def handle_new(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("\n".join(lines), parse_mode="Markdown")
 
 async def handle_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return await reject(update)
     active = session_manager.list_sessions()
     if not active:
         await update.message.reply_text("🚫 No active sessions.")
@@ -31,6 +36,8 @@ async def handle_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(msg)
 
 async def handle_kill(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return await reject(update)
     args = context.args
     if not args:
         return await update.message.reply_text("⚠️ Usage: /kill <session_id>")
@@ -41,6 +48,8 @@ async def handle_kill(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text)
 
 async def handle_killall(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return await reject(update)
     count = len(session_manager.list_sessions())
     session_manager.cleanup_all_sessions()
 
@@ -50,6 +59,8 @@ async def handle_killall(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("🚫 No active sessions.")
 
 async def handle_show(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return await reject(update)
     args = context.args
     if not args:
         return await update.message.reply_text("⚠️ Usage: /show <session_id>")
