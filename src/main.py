@@ -1,14 +1,19 @@
+from pathlib import Path
+import atexit
 import os
+
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler
-from src.modules import commands
+
+from src.modules import commands, session_manager
 
 def main():
-    load_dotenv(dotenv_path=os.path.join(os.getcwd(), ".env"))
+    load_dotenv(dotenv_path=Path.cwd() / ".env")
     token = os.getenv("BOT_TOKEN")
-
     if not token:
         raise ValueError("BOT_TOKEN environment variable not set")
+
+    atexit.register(session_manager.cleanup_all_sessions)
 
     app = ApplicationBuilder().token(token).build()
     app.add_handler(CommandHandler("new", commands.handle_new))
